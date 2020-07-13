@@ -1,3 +1,5 @@
 src/backend/.vs/*
 src/backend/bin/*
 src/backend/obj/*
+src/frontend/obj/Docker/CanonicalServiceNames.cache
+src/backend/backend.csproj.user
