@@ -1,0 +1,5 @@
+src/backend/.vs/**
+src/backend/bin/**
+src/backend/obj/**
+src/backend/bin/Debug/netcoreapp3.1**
+/src/backend/backend.csproj.user
