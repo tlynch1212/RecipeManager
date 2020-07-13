@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: C:\Development\RecipeManager\src\docker
+      dockerfile: ../backend/Dockerfile
+    image: backend
+    ports:
+    - target: 80
+    - target: 443
+  frontend:
+    build:
+      context: C:\Development\RecipeManager\src\docker
+      dockerfile: ../frontend/Dockerfile
+    image: frontend
+    stdin_open: true
+version: '3.4'

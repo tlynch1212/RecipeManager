@@ -3,16 +3,12 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>950f209a-322c-4292-a3a9-8eaa4487ec89</ProjectGuid>
+    <ProjectGuid>999b0844-0b56-443e-aa64-9ee76c8d5db6</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/weatherforecast</DockerServiceUrl>
-    <DockerServiceName>backend</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="docker-compose.override.yml">
-      <DependentUpon>docker-compose.yml</DependentUpon>
-    </None>
-    <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="docker-compose.yml" />
   </ItemGroup>
 </Project>
