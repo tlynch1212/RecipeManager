@@ -15,7 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "docker": "docker run -it --rm -v /:/app -v /app/node_modules -p 3000:3000  -e CHOKIDAR_USEPOLLING=true recipemanager:latest"
+    "docker": "docker run -it --rm -v %cd%:/app -v /app/node_modules -p 3000:3000  -e CHOKIDAR_USEPOLLING=true recipemanager:latest"
   },
   "eslintConfig": {
     "extends": "react-app"
