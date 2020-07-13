@@ -4,12 +4,12 @@ services:
     stdin_open: true
     image: frontend
     build:
-      context: ../../
+      context: .
       dockerfile: ./src/frontend/Dockerfile
   backend:
     image: backend
     build:
-      context: ../../
+      context: .
       dockerfile: ./src/backend/Dockerfile
     ports:
       - 80
