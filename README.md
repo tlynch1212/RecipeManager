@@ -4,5 +4,11 @@ This is an app that manages recipes for you and your family. You can share your 
 
 ### Running the app locally
 
-This app is a React frontend combo with a dotnet core api. It is set up to use docker compose to simplify running locally
-run this to build the containers `docker-compose -f "docker-compose.yml" up -d --build`
+* Frontend - run the following in the frontend directory
+    - `npm install`
+    - `docker build -t recipemanager:latest .`
+    - `npm run docker`
+
+* Backend - in visual studio, set your debugger to dockerfile. Run.
+    
+
