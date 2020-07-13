@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/tlynch1212/RecipeManager.svg?token=9yh5dvb5xvXyjzKPfH36&branch=master)](https://travis-ci.com/tlynch1212/RecipeManager)
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
