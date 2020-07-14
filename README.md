@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/tlynch1212/RecipeManager.svg?token=9yh5dvb5xvXyjzKPfH36&branch=master)](https://travis-ci.com/tlynch1212/RecipeManager)
+
 ## Intro 
 
 Front end for the Recipe Manager
