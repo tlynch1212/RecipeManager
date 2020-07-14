@@ -25,8 +25,8 @@ const TheHeader = () => {
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">
-      <CHeaderNavItem className="px-3" >
-          <CHeaderNavLink to="/add"><FontAwesomeIcon icon={faPlusSquare}  /></CHeaderNavLink>
+      <CHeaderNavItem className="px-2" >
+          <CHeaderNavLink to="/create"><FontAwesomeIcon icon={faPlusSquare} size="2x" /></CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/browse">Browse</CHeaderNavLink>
