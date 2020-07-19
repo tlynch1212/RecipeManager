@@ -4,6 +4,8 @@ import {
   CFormGroup, CTextarea, CInput, CInputRadio, CLabel, CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import Loading from '../components/Loading'
+import { withAuthenticationRequired } from '@auth0/auth0-react'
 
 const CreateRecipe = () => {
   return (
@@ -62,4 +64,6 @@ const CreateRecipe = () => {
   )
 }
 
-export default CreateRecipe
+export default withAuthenticationRequired(CreateRecipe, {
+  onRedirecting: () => <Loading />,
+});

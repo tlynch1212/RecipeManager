@@ -1,4 +1,6 @@
 import React from 'react'
+import { withAuthenticationRequired } from '@auth0/auth0-react';
+import Loading from '../components/Loading';
 
 const Browse = () => {
   return (
@@ -6,4 +8,6 @@ const Browse = () => {
   )
 }
 
-export default Browse
+export default withAuthenticationRequired(Browse, {
+  onRedirecting: () => <Loading />,
+});
