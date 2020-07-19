@@ -6,8 +6,7 @@ import {
     CHeaderNavItem,
     CHeaderNavLink,
     CSubheader,
-    CBreadcrumbRouter
-} from '@coreui/react'
+    CBreadcrumbRouter} from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
@@ -26,8 +25,8 @@ const TheHeader = () => {
 
     return (
         <CHeader withSubheader>
-            <CHeaderBrand className="mx-auto d-lg-none" to="/">
-                <CIcon name="logo" height="48" alt="Logo" />
+            <CHeaderBrand to="/">
+                <CIcon name="logo" height="90" alt="Logo" src={'logo_transparent.svg'} />
             </CHeaderBrand>
 
             <CHeaderNav className="d-md-down-none mr-auto">

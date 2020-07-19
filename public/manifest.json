@@ -1,9 +1,9 @@
 {
-  "short_name": "CoreUI-React",
-  "name": "CoreUI-React sample",
+  "short_name": "Recipe Manager",
+  "name": "Recipe Manager",
   "icons": [
     {
-      "src": "./assets/img/favicon.png",
+      "src": "./logo_transparent.svg",
       "sizes": "100x100",
       "type": "image/png"
     }
