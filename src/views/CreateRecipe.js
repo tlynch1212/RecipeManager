@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react'
 import uuid from 'uuid';
 import * as ApiConnector from '../api/ApiConnector';
+import AlertModel from '../components/AlertModel';
 
 const CreateRecipe = () => {
   const [Name, setName] = React.useState('');
@@ -15,23 +16,24 @@ const CreateRecipe = () => {
   const [IsPublic, setPublic] = React.useState(false);
   const [Ingredients, setIngredients] = React.useState([]);
   const [IngredientsKeys, setIngredientsKeys] = React.useState([]);
+  const [CreateSuccess, setCreateSuccess] = React.useState(false);
 
   const { getAccessTokenSilently } = useAuth0();
-    const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-    
-    let token = '';
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-    getAccessTokenSilently({
-        audience: `https://recipemanager.com/api`,
-        scope: "read:user",
-      }).then((response) => {
-        token = response
-      });
+  let token = '';
+
+  getAccessTokenSilently({
+    audience: audience,
+    scope: "read:user",
+  }).then((response) => {
+    token = response
+  });
 
   function GetVisibility(isPublic) {
     if (isPublic) {
       return IsPublic;
-    }else {
+    } else {
       return !IsPublic;
     }
   }
@@ -83,8 +85,8 @@ const CreateRecipe = () => {
     }
 
     ApiConnector.createRecipe(recipe, token).then((response) => {
-      if (response.status === 200){
-        alert("Success!");
+      if (response.status === 200) {
+        setCreateSuccess(true);
       }
     });
 
@@ -108,7 +110,14 @@ const CreateRecipe = () => {
 
   return (
     <CRow>
-      <CCol xs="12" md="12">
+      <CCol xs="12" md="12"> 
+        <AlertModel
+          isOpen={CreateSuccess}
+          onClose={() => setCreateSuccess(!CreateSuccess)}
+          color='success'
+          Message={'Your new recipe has been created! You can find it in the My Recipes page.'}
+          Title={'Success!'} >
+        </AlertModel>
         <CCard>
           <CCardHeader>
             Create New Recipe
