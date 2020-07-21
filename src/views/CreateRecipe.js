@@ -9,6 +9,8 @@ import uuid from 'uuid';
 import * as ApiConnector from '../api/ApiConnector';
 import AlertModel from '../components/AlertModel';
 
+var jwtDecode = require('jwt-decode');
+
 const CreateRecipe = () => {
   const [Name, setName] = React.useState('');
   const [CurrentIngredient, setCurrentIngredient] = React.useState('');
@@ -22,12 +24,13 @@ const CreateRecipe = () => {
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   let token = '';
-
+  let decodedToken;
   getAccessTokenSilently({
     audience: audience,
     scope: "read:user",
   }).then((response) => {
-    token = response
+    token = response;
+    decodedToken = jwtDecode(token);
   });
 
   function GetVisibility(isPublic) {
@@ -74,6 +77,7 @@ const CreateRecipe = () => {
 
   function createRecipe() {
     let recipe = {
+      UserId: decodedToken.sub,
       Name: Name,
       Instructions: Instructions,
       IsPublic: IsPublic,
@@ -87,6 +91,12 @@ const CreateRecipe = () => {
     ApiConnector.createRecipe(recipe, token).then((response) => {
       if (response.status === 200) {
         setCreateSuccess(true);
+        setCurrentIngredient('');
+        setName('');
+        setInstructions('');
+        setPublic(false);
+        setIngredients([]);
+        setIngredientsKeys([]);
       }
     });
 
@@ -129,7 +139,7 @@ const CreateRecipe = () => {
                   <CLabel htmlFor="Name">Recipe Name</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                  <CInput id="Name" name="Name" onChange={addName} placeholder="Enter Recipe Name" />
+                  <CInput id="Name" name="Name" onChange={addName} value={Name} placeholder="Enter Recipe Name" />
                 </CCol>
               </CFormGroup>
               <CFormGroup row>
@@ -139,6 +149,7 @@ const CreateRecipe = () => {
                 <CCol xs="12" md="9">
                   <CTextarea
                     onChange={addInstructions}
+                    value={Instructions}
                     name="Instructions"
                     id="Instructions"
                     rows="9"

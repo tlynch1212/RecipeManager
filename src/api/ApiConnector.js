@@ -1,6 +1,6 @@
 
 export function createRecipe(recipe, token){
-    return fetch('https://localhost:32770/recipe', {
+    return fetch('https://localhost:32772/recipe', {
         method: 'post',
         body: JSON.stringify(recipe),
         headers: {
