@@ -13,7 +13,8 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const TheHeaderDropdown = () => {
-    const { logout } = useAuth0();
+    const { logout, user } = useAuth0();
+  const { picture} = user;
 
     return (
         <CDropdown
@@ -24,7 +25,7 @@ const TheHeaderDropdown = () => {
             <CDropdownToggle className="c-header-nav-link" caret={false}>
                 <div className="c-avatar">
                     <CImg
-                        src={'avatars/6.jpg'}
+                        src={picture}
                         className="c-avatar-img"
                         alt="admin@bootstrapmaster.com"
                     />
@@ -34,10 +35,6 @@ const TheHeaderDropdown = () => {
                 <CDropdownItem>
                     <CIcon name="cil-user" className="mfe-2" />
                     <CHeaderNavLink to="/profile">Profile</CHeaderNavLink>
-                </CDropdownItem>
-                <CDropdownItem>
-                    <CIcon name="cil-settings" className="mfe-2" />
-                    <CHeaderNavLink to="/settings">Settings</CHeaderNavLink>
                 </CDropdownItem>
                 <CDropdownItem divider />
                 <CDropdownItem>

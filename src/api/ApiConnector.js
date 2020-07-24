@@ -22,3 +22,14 @@ export function getRecipes(token, userId){
       return response.json();
     });
 }
+
+export function browse(token){
+  return fetch(`https://localhost:32770/browse?fetchCount=1000`, {
+      method: 'get',
+      headers: {
+          Authorization: `Bearer ${token}`,
+      }
+    }).then(function(response) {
+      return response.json();
+    });
+}

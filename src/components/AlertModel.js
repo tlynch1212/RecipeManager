@@ -14,6 +14,7 @@ const AlertModel = (props) => {
             show={props.isOpen}
             onClose={props.onClose}
             color={props.color}
+            size={props.size}
         >
             <CModalHeader closeButton>
                 <CModalTitle>{props.Title}</CModalTitle>
