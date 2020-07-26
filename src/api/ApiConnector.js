@@ -1,6 +1,7 @@
+const domain = 'https://localhost:5001'
 
 export function createRecipe(recipe, token){
-    return fetch('https://localhost:32770/recipe', {
+    return fetch(`${domain}/recipe`, {
         method: 'post',
         body: JSON.stringify(recipe),
         headers: {
@@ -13,7 +14,7 @@ export function createRecipe(recipe, token){
 }
 
 export function getRecipes(token, userId){
-  return fetch(`https://localhost:32770/recipe?userId=${userId}`, {
+  return fetch(`${domain}/recipe?userId=${userId}`, {
       method: 'get',
       headers: {
           Authorization: `Bearer ${token}`,
