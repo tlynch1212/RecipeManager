@@ -1,4 +1,4 @@
-const domain = 'https://localhost:5001'
+const domain = 'https://localhost:32768'
 
 export function createRecipe(recipe, token){
     return fetch(`${domain}/recipe`, {
@@ -25,7 +25,7 @@ export function getRecipes(token, userId){
 }
 
 export function browse(token){
-  return fetch(`https://localhost:32770/browse?fetchCount=1000`, {
+  return fetch(`${domain}/browse?fetchCount=1000`, {
       method: 'get',
       headers: {
           Authorization: `Bearer ${token}`,
