@@ -1,36 +1,105 @@
 const domain = 'https://localhost:32768'
 
-export function createRecipe(recipe, token){
-    return fetch(`${domain}/recipe`, {
-        method: 'post',
-        body: JSON.stringify(recipe),
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        }
-      }).then(function(response) {
-        return response;
-      });
+export function createRecipe(recipe, token) {
+  return fetch(`${domain}/recipe`, {
+    method: 'post',
+    body: JSON.stringify(recipe),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
 }
 
-export function getRecipes(token, userId){
-  return fetch(`${domain}/recipe?userId=${userId}`, {
-      method: 'get',
-      headers: {
-          Authorization: `Bearer ${token}`,
-      }
-    }).then(function(response) {
-      return response.json();
-    });
+export function FavoriteRecipe(recipeId, userId, token) {
+  return fetch(`${domain}/recipe/favorite`, {
+    method: 'put',
+    body: JSON.stringify({
+      RecipeId: recipeId,
+      UserId: userId
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
 }
 
-export function browse(token){
-  return fetch(`${domain}/browse?fetchCount=1000`, {
-      method: 'get',
-      headers: {
-          Authorization: `Bearer ${token}`,
-      }
-    }).then(function(response) {
+export function RateRecipe(recipe, userId, rating, token) {
+  return fetch(`${domain}/rate`, {
+    method: 'post',
+    body: JSON.stringify({
+      UserId: userId,
+      RecipeId: recipe.id,
+      Rate: rating
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
+}
+
+export function getUser(token, userId) {
+  return fetch(`${domain}/user?userId=${userId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function getRating(token, userId, recipeId) {
+  return fetch(`${domain}/rate?userId=${userId}&recipeId=${recipeId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    if (response.status === 200){
       return response.json();
-    });
+    }
+  });
+}
+
+
+export function getRecipes(token, userId) {
+  return fetch(`${domain}/recipe/user?userId=${userId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function getRecipe(token, recipeId) {
+  return fetch(`${domain}/recipe?recipeId=${recipeId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function browse(token) {
+  return fetch(`${domain}/browse?fetchCount=100`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
 }

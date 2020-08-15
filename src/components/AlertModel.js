@@ -23,7 +23,7 @@ const AlertModel = (props) => {
                 {props.Message}
             </CModalBody>
             <CModalFooter>
-                <CButton color="success" onClick={props.onClose}>Close</CButton>{' '}
+                <CButton color="warning" onClick={props.onClose}>Close</CButton>
             </CModalFooter>
         </CModal>
     )

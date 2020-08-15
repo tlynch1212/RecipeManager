@@ -1,28 +1,15 @@
 import React, { useEffect } from 'react'
 import Loading from '../components/Loading';
-import RecipeBrowser from '../components/RecipeBrowser';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 import * as ApiConnector from '../api/ApiConnector';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import loading from "../assets/loading.svg";
+import RecipeScroller from '../components/RecipeScroller';
 
 const Browse = () => {
   const [Recipes, setRecipes] = React.useState([]);
-  const [LoadedIndex, setLoadedIndex] = React.useState(0);
-  const [LoadedRecipes, setLoadedRecipes] = React.useState([]);
-  const [HasMore, setHasMore] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(true);
+  const [AccessToken, setAccessToken] = React.useState('');
   const { getAccessTokenSilently } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
-
-  const loadMore = () => {
-    if (LoadedIndex >= Recipes.length){
-      setHasMore(false);
-      return;
-    }
-
-    setLoadedRecipes(LoadedRecipes.concat(Recipes.splice(LoadedIndex, 20)));
-    setLoadedIndex(LoadedIndex + 20);
-  };
 
 
   useEffect(() => {
@@ -32,32 +19,22 @@ const Browse = () => {
           audience: audience,
           scope: "read:user",
         });
-
+        setAccessToken(accessToken);
         const recipeResponse = await ApiConnector.browse(accessToken);
         setRecipes(recipeResponse);
-        setLoadedRecipes(recipeResponse.splice(LoadedIndex, 20));
-        setLoadedIndex(LoadedIndex + 20);
+        setLoading(false);
       } catch (e) {
         console.log(e.message);
       }
     };
 
     getRecipes();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <InfiniteScroll
-      dataLength={Recipes.length}
-      next={loadMore}
-      hasMore={HasMore}
-      loader={<div className="spinner">
-        <img src={loading} alt="Loading" />
-      </div>}>
-      <RecipeBrowser Recipes={LoadedRecipes}></RecipeBrowser>
-    </InfiniteScroll>
-
-
+    isLoading ? <Loading /> :
+    <RecipeScroller AccessToken={AccessToken} Recipes={Recipes} NoContentText={'Sorry! Looks like we dont have any recipes to browse at the moment.'} />
   )
 }
 
