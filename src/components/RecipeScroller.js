@@ -47,14 +47,13 @@ const RecipeScroller = (props) => {
             loader={<div className="spinner">
               <img src={loading} alt="Loading" />
             </div>}>
-            <RecipeBrowser AccessToken={props.AccessToken} Recipes={LoadedRecipes}></RecipeBrowser>
+            <RecipeBrowser AccessToken={props.AccessToken} userId={props.userId} isEditable={props.isEditable} Recipes={LoadedRecipes}></RecipeBrowser>
           </InfiniteScroll>
           :
           <NoContent Text={props.NoContentText} />
       }
 
     </div>
-
   )
 }
 

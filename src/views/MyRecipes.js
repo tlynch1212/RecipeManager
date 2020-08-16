@@ -8,6 +8,8 @@ import RecipeScroller from '../components/RecipeScroller';
 const MyRecipe = () => {
   const [Recipes, setRecipes] = React.useState([]);
   const [isLoading, setLoading] = React.useState(true);
+  const [AccessToken, setAccessToken] = React.useState('');
+  const [UserId, setUserId] = React.useState('');
   const { getAccessTokenSilently } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
@@ -19,7 +21,11 @@ const MyRecipe = () => {
           audience: audience,
           scope: "read:user",
         });
-
+        var user = JwtDecode(accessToken);
+        setAccessToken(accessToken);
+        ApiConnector.getUser(accessToken, user.sub).then((response) => {
+          setUserId(response.id);
+        });
         const recipeResponse = await ApiConnector.getRecipes(accessToken, JwtDecode(accessToken).sub);
         setRecipes(recipeResponse);
         setLoading(false)
@@ -34,7 +40,7 @@ const MyRecipe = () => {
 
   return (
     isLoading ? <Loading /> :
-    <RecipeScroller Recipes={Recipes} NoContentText={'Sorry! You dont have any Created or starred Recipes. Go to Browse to find some or Create your own by clicking the plus sign on the top left of the screen.'} />
+    <RecipeScroller AccessToken={AccessToken} userId={UserId} Recipes={Recipes} isEditable={true} NoContentText={'Sorry! You dont have any Created or starred Recipes. Go to Browse to find some or Create your own by clicking the plus sign on the top left of the screen.'} />
   )
 }
 

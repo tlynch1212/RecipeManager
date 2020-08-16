@@ -1,4 +1,4 @@
-const domain = 'https://localhost:32768'
+const domain = 'https://localhost:44369'
 
 export function createRecipe(recipe, token) {
   return fetch(`${domain}/recipe`, {
@@ -12,6 +12,20 @@ export function createRecipe(recipe, token) {
     return response;
   });
 }
+
+export function updateRecipe(recipe, token) {
+  return fetch(`${domain}/recipe`, {
+    method: 'put',
+    body: JSON.stringify(recipe),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
+}
+
 
 export function FavoriteRecipe(recipeId, userId, token) {
   return fetch(`${domain}/recipe/favorite`, {

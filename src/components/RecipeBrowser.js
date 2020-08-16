@@ -10,6 +10,7 @@ import {
 import AlertModel from './AlertModel';
 import * as ApiConnector from '../api/ApiConnector';
 import JwtDecode from 'jwt-decode';
+import { withRouter } from 'react-router-dom';
 
 const RecipeBrowser = (props) => {
   const [IsOpen, setIsOpen] = React.useState(false);
@@ -17,6 +18,9 @@ const RecipeBrowser = (props) => {
   const [IsRated, setIsRated] = React.useState(false);
   const [Recipe, setRecipe] = React.useState(null);
 
+  const editRecipe = (recipe) =>{
+    props.history.push({pathname: '/create', state: {recipe: recipe, accessToken: props.AccessToken}});
+  };
 
   const seeDetails = (recipe, accessToken) => {
     var user = JwtDecode(accessToken);
@@ -40,7 +44,6 @@ const RecipeBrowser = (props) => {
           setIsRated(false);
         }
       });
-
     });
     setRecipe(recipe);
     setIsOpen(true);
@@ -64,7 +67,6 @@ const RecipeBrowser = (props) => {
     setIsRated(true);
     setIsFavorited(true);
   }
-
 
   const rateThisRecipe = (recipe, rating, accessToken) => {
     var user = JwtDecode(accessToken);
@@ -161,6 +163,7 @@ const RecipeBrowser = (props) => {
                   <h5>{recipe.name}</h5>
                 </CCol>
                 <CCol md="3">
+                  {props.isEditable && recipe.userId === props.userId.toString() ? <CButton color="info" onClick={() => editRecipe(recipe, props.AccessToken)}>Edit</CButton> : null}
                   <CButton color="info" onClick={() => seeDetails(recipe, props.AccessToken)}>Details</CButton>
                 </CCol>
               </CRow>
@@ -183,4 +186,4 @@ const RecipeBrowser = (props) => {
   )
 }
 
-export default RecipeBrowser;
+export default withRouter(RecipeBrowser);

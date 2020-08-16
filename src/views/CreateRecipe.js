@@ -1,37 +1,50 @@
 import React from 'react'
 import {
   CButton, CCard, CCardBody, CCardFooter, CCardHeader, CCol, CForm,
-  CFormGroup, CTextarea, CInput, CInputRadio, CLabel, CRow, CListGroupItem, CListGroup
-} from '@coreui/react'
+  CFormGroup, CInput, CInputRadio, CLabel, CRow, CTextarea} from '@coreui/react'
 import Loading from '../components/Loading'
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react'
-import uuid from 'uuid';
 import * as ApiConnector from '../api/ApiConnector';
 import AlertModel from '../components/AlertModel';
+import ListForm from '../components/ListForm';
 
 var jwtDecode = require('jwt-decode');
 
-const CreateRecipe = () => {
-  const [Name, setName] = React.useState('');
-  const [CurrentIngredient, setCurrentIngredient] = React.useState('');
-  const [Instructions, setInstructions] = React.useState('');
-  const [IsPublic, setPublic] = React.useState(false);
-  const [Ingredients, setIngredients] = React.useState([]);
-  const [IngredientsKeys, setIngredientsKeys] = React.useState([]);
+const CreateRecipe = (props) => {
+  const state = props.location.state;
+  const [Id] = React.useState(state ? state.recipe.id : '');
+  const [Name, setName] = React.useState(state ? state.recipe.name : '');
+  const [Description, setDescription] = React.useState(state ? state.recipe.description : '');
+  const [Instructions, setInstructions] = React.useState(state ? state.recipe.instructions : []);
+  const [IsPublic, setPublic] = React.useState(state ? state.recipe.isPublic :  false);
+  const [Ingredients, setIngredients] = React.useState(state ? state.recipe.ingredients : []);
   const [CreateSuccess, setCreateSuccess] = React.useState(false);
 
   const { getAccessTokenSilently } = useAuth0();
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
-  let token = '';
+  let token = state ? state.accessToken : '';
   let decodedToken;
-  getAccessTokenSilently({
-    audience: audience,
-    scope: "read:user",
-  }).then((response) => {
-    token = response;
+
+  if (token === '') {
+    getAccessTokenSilently({
+      audience: audience,
+      scope: "read:user",
+    }).then((response) => {
+      token = response;
+      decodedToken = jwtDecode(token);
+    });
+  }else {
     decodedToken = jwtDecode(token);
-  });
+  }
+
+
+  function getIndredients(){
+    return Ingredients;
+  }
+  function getInstructions(){
+    return Instructions;
+  }
 
   function GetVisibility(isPublic) {
     if (isPublic) {
@@ -50,72 +63,56 @@ const CreateRecipe = () => {
   function addName(event) {
     setName(event.target.value);
   }
-  function addInstructions(event) {
-    setInstructions(event.target.value);
+
+  function addDescription(event) {
+    setDescription(event.target.value);
   }
-
-  function addIngredient() {
-    let newIngredientList = [...Ingredients];
-    newIngredientList.push(CurrentIngredient);
-    setIngredients(newIngredientList);
-    addIngredientKey();
-    setCurrentIngredient('');
-  }
-
-  function addIngredientKey() {
-    let key = uuid.v4();
-    let newIngredientKeyList = [...IngredientsKeys];
-    newIngredientKeyList.push(key);
-    setIngredientsKeys(newIngredientKeyList);
-  }
-
-
-  function addCurrentIngredient(event) {
-    setCurrentIngredient(event.target.value);
-  }
-
 
   function createRecipe() {
     let recipe = {
       UserId: decodedToken.sub,
+      Description: Description,
       Name: Name,
       Instructions: Instructions,
       IsPublic: IsPublic,
-      Ingredients: Ingredients.map((item) => {
-        return {
-          value: item
-        }
-      })
+      Ingredients: Ingredients
     }
 
     ApiConnector.createRecipe(recipe, token).then((response) => {
       if (response.status === 200) {
         setCreateSuccess(true);
-        setCurrentIngredient('');
-        setName('');
-        setInstructions('');
-        setPublic(false);
         setIngredients([]);
-        setIngredientsKeys([]);
+        setName('');
+        setInstructions([]);
+        setPublic(false);
       }
     });
 
 
   };
 
-  function deleteIngredient(key) {
-    let newIngredientList = [...Ingredients];
-    var indexKey = IngredientsKeys.indexOf(key);
-    newIngredientList.splice(indexKey, 1);
-    setIngredients(newIngredientList);
-    deleteIngredientKey(key);
-  };
+  function updateRecipe() {
+    let recipe = {
+      Id: Id,
+      UserId: state.recipe.UserId,
+      Description: Description,
+      Name: Name,
+      Instructions: Instructions,
+      IsPublic: IsPublic,
+      Ingredients: Ingredients
+    }
 
-  function deleteIngredientKey(key) {
-    let newIngredientList = [...IngredientsKeys];
-    var indexKey = newIngredientList.indexOf(key);
-    newIngredientList.splice(indexKey, 1);
-    setIngredientsKeys(newIngredientList);
+    ApiConnector.updateRecipe(recipe, token).then((response) => {
+      if (response.status === 200) {
+        setCreateSuccess(true);
+        setIngredients([]);
+        setName('');
+        setInstructions([]);
+        setPublic(false);
+      }
+    });
+
+
   };
 
   return (
@@ -125,12 +122,12 @@ const CreateRecipe = () => {
           isOpen={CreateSuccess}
           onClose={() => setCreateSuccess(!CreateSuccess)}
           color='success'
-          Message={'Your new recipe has been created! You can find it in the My Recipes page.'}
+          Message={Id !== '' ? 'Your new recipe has been updated!' : 'Your new recipe has been created! You can find it in the My Recipes page.'}
           Title={'Success!'} >
         </AlertModel>
         <CCard>
           <CCardHeader>
-            Create New Recipe
+            {Id !== '' ? 'Update Recipe' : 'Create New Recipe'}
             </CCardHeader>
           <CCardBody>
             <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -139,21 +136,21 @@ const CreateRecipe = () => {
                   <CLabel htmlFor="Name">Recipe Name</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                  <CInput id="Name" name="Name" onChange={addName} value={Name} placeholder="Enter Recipe Name" />
+                  <CInput id="Name" name="Name" onChange={addName} value={Name} placeholder="Enter recipe name" />
                 </CCol>
               </CFormGroup>
               <CFormGroup row>
                 <CCol md="3">
-                  <CLabel htmlFor="Instructions">Instructions</CLabel>
+                  <CLabel htmlFor="Description">Description</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
                   <CTextarea
-                    onChange={addInstructions}
-                    value={Instructions}
-                    name="Instructions"
-                    id="Instructions"
+                    onChange={addDescription}
+                    value={Description}
+                    name="Description"
+                    id="Description"
                     rows="9"
-                    placeholder="Enter the instructions to create this new recipe"
+                    placeholder="Enter the description"
                   />
                 </CCol>
               </CFormGroup>
@@ -172,43 +169,16 @@ const CreateRecipe = () => {
                   </CFormGroup>
                 </CCol>
               </CFormGroup>
-              <CFormGroup row>
-                <CCol md="3">
-                  <CLabel>Add to Ingredients</CLabel>
-                </CCol>
-                <CCol md="9">
-                  <CFormGroup row>
-                    <CCol md="6">
-                      <CInput id="AddIngredient" name="AddIngredient" onChange={addCurrentIngredient} value={CurrentIngredient} placeholder="Ingredient" />
-                    </CCol>
-                    <CCol xs="12" md="2">
-                      <CButton type="button" size="sm" onClick={addIngredient}
-                        disabled={CurrentIngredient === "" ? true : false} color="success">Add</CButton>
-                    </CCol>
-                  </CFormGroup>
-                </CCol>
-              </CFormGroup>
-              <CFormGroup row>
-                <CCol md="3">
-                  <CLabel>Ingredients</CLabel>
-                </CCol>
-                <CCol md="6" >
-                  <CListGroup key={Ingredients.length + "list"}>
-                    {Ingredients.map((item, index) => (
-                      <CListGroupItem className="justify-content-between">
-                        {item}
-                        <CButton type="button" className="float-right" size="sm" onClick={() => deleteIngredient(IngredientsKeys[index])}>Delete</CButton>
-                      </CListGroupItem>
-                    ))}
-                  </CListGroup>
-                </CCol>
-              </CFormGroup>
+              <ListForm ListAddName={'Add To Instructions'} getListItems={() => getInstructions()} 
+                  setListItems={(list) => setInstructions(list)} ListName={'Insructions'} ListItems={Instructions} placeHolder={'Enter an instruction'}/>
+              <ListForm ListAddName={'Add To Ingredients'} getListItems={() => getIndredients()}
+                  setListItems={(list) => setIngredients(list)} ListName={'Ingredients'} ListItems={Ingredients} placeHolder={'Enter an ingredient'}/>
             </CForm>
           </CCardBody>
           <CCardFooter>
-            <CButton type="submit" size="lg" onClick={createRecipe}
-              disabled={(Name === '' || Ingredients.length === 0 || Instructions === '')}
-              color="primary"> Create</CButton>
+            <CButton type="submit" size="lg" onClick={ Id !== '' ? updateRecipe : createRecipe}
+              disabled={(Name === '' || Ingredients.length === 0 || Instructions === '' || Description === '')}
+              color="primary"> {Id !== '' ? 'Update' : 'Create'}</CButton>
           </CCardFooter>
         </CCard>
       </CCol>
