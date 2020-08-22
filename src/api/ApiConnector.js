@@ -26,6 +26,35 @@ export function updateRecipe(recipe, token) {
   });
 }
 
+export function deleteRecipe(recipe, token) {
+  return fetch(`${domain}/recipe`, {
+    method: 'delete',
+    body: JSON.stringify(recipe),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
+}
+
+export function unFavoriteRecipe(token, userId, recipeId ) {
+  return fetch(`${domain}/recipe/unfavorite`, {
+    method: 'put',
+    body: JSON.stringify({
+      RecipeId: recipeId,
+      UserId: userId
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response;
+  });
+}
+
 
 export function FavoriteRecipe(recipeId, userId, token) {
   return fetch(`${domain}/recipe/favorite`, {
@@ -84,6 +113,19 @@ export function getRating(token, userId, recipeId) {
   });
 }
 
+export function getFavorite(token, userId, recipeId) {
+  return fetch(`${domain}/favorite?userId=${userId}&recipeId=${recipeId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    if (response.status === 200){
+      return response.json();
+    }
+  });
+}
+
 
 export function getRecipes(token, userId) {
   return fetch(`${domain}/recipe/user?userId=${userId}`, {
@@ -98,6 +140,17 @@ export function getRecipes(token, userId) {
 
 export function getRecipe(token, recipeId) {
   return fetch(`${domain}/recipe?recipeId=${recipeId}`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function recommend(token, userId, fetchCount) {
+  return fetch(`${domain}/recommendation/predict?authId=${userId}&amount=${fetchCount}`, {
     method: 'get',
     headers: {
       Authorization: `Bearer ${token}`,
