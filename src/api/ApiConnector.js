@@ -1,4 +1,4 @@
-const domain = 'https://localhost:44369'
+const domain = 'https://capstonerecipemanagerapi.azurewebsites.net'
 
 export function createRecipe(recipe, token) {
   return fetch(`${domain}/recipe`, {
