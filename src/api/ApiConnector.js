@@ -1,5 +1,5 @@
 const domain = 'https://capstonerecipemanagerapi.azurewebsites.net'
-
+//const domain = 'https://localhost:44369'
 export function createRecipe(recipe, token) {
   return fetch(`${domain}/recipe`, {
     method: 'post',
@@ -162,6 +162,39 @@ export function recommend(token, userId, fetchCount) {
 
 export function browse(token) {
   return fetch(`${domain}/browse?fetchCount=100`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function topRatings(token) {
+  return fetch(`${domain}/analytics/top/ratings?count=10`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function rateDifference(token) {
+  return fetch(`${domain}/analytics/ratings`, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  }).then(function (response) {
+    return response.json();
+  });
+}
+
+export function topInteraction(token) {
+  return fetch(`${domain}/analytics/top/interactions?count=10`, {
     method: 'get',
     headers: {
       Authorization: `Bearer ${token}`,
